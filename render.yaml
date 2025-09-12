@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: lightsmartpay
+    env: docker
+    plan: free
+    region: oregon
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        value: dpg-d300uhqli9vc738gsp3g-a
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: lightsmarttopup
+      - key: DB_USER
+        value: lightsmarttopup_user
+      - key: DB_PASS
+        value: Yb68Pt3nySr1IRpuX7BOcEjmWrrmbNcJ
