@@ -8,12 +8,12 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: DB_HOST
-        value: dpg-d300uhqli9vc738gsp3g-a
+        value: dpg-d326jbadbo4c73a6urog-a
       - key: DB_PORT
         value: 5432
       - key: DB_NAME
-        value: lightsmarttopup
+        value: lightsmartpay
       - key: DB_USER
-        value: lightsmarttopup_user
+        value: lightsmartpay_user
       - key: DB_PASS
-        value: Yb68Pt3nySr1IRpuX7BOcEjmWrrmbNcJ
+        value: ikPevBhb9xHModBeJYsGIvtcmY6rmPuH
