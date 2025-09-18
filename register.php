@@ -1,5 +1,5 @@
 <?php
-require 'config.php'; // ✅ correct file
+require 'config.php';
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,47 +22,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register - LightSmartPay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | LightSmartPay</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="auth-body">
-
-<div class="auth-container">
-  <h1 class="brand">LightSmartPay</h1>
-  <div class="auth-card">
-    <h2>Create Account</h2>
-    <?php if ($message): ?>
-      <p class="error"><?= htmlspecialchars($message) ?></p>
+<body>
+  <div class="form-container">
+    <h2>🚀 Create Account</h2>
+    <?php if (!empty($message)): ?>
+      <p class="error"><?= $message ?></p>
     <?php endif; ?>
     <form method="POST">
-      <div class="form-group">
+      <div class="input-group">
         <label>Full name</label>
         <input type="text" name="fullname" required>
       </div>
-
-      <div class="form-group">
+      <div class="input-group">
         <label>Email</label>
         <input type="email" name="email" required>
       </div>
-
-      <div class="form-group password-group">
+      <div class="input-group">
         <label>Password (min 6)</label>
-        <input type="password" name="password" id="password" minlength="6" required>
-        <span class="toggle-password" onclick="togglePassword()">👁</span>
+        <div class="password-wrapper">
+          <input type="password" name="password" id="password" required minlength="6">
+          <span class="toggle-password" onclick="togglePassword()">👁</span>
+        </div>
       </div>
-
-      <button type="submit" class="btn-primary">Register</button>
+      <button type="submit">Register</button>
     </form>
-    <p class="switch-auth">Already registered? <a href="login.php">Login</a></p>
+    <p>Already registered? <a href="login.php">Login</a></p>
   </div>
-</div>
 
-<script>
-function togglePassword() {
-  let pwd = document.getElementById("password");
-  pwd.type = pwd.type === "password" ? "text" : "password";
-}
-</script>
-
+  <script>
+    function togglePassword() {
+      const pass = document.getElementById("password");
+      pass.type = (pass.type === "password") ? "text" : "password";
+    }
+  </script>
 </body>
 </html>
