@@ -1,63 +1,59 @@
 <?php
-// register.php
-session_start();
-include 'config.php'; // config.php must create $pdo (PDO)
+require 'config.php';
 
-$error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $fullname = trim($_POST['fullname'] ?? '');
+try {
+    $sql = "
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        fullname VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        wallet_balance NUMERIC(12,2) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Enter a valid email.";
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters.";
-    } else {
-        try {
-            // check existing
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
-            $stmt->execute([':email' => $email]);
-            if ($stmt->fetch()) {
-                $error = "Email already registered.";
-            } else {
-                $hash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (fullname, email, password, wallet_balance, created_at) VALUES (:fullname, :email, :pass, 0, NOW())");
-                $stmt->execute([
-                    ':fullname' => $fullname,
-                    ':email' => $email,
-                    ':pass' => $hash
-                ]);
-                header("Location: login.php?registered=1");
-                exit;
-            }
-        } catch (Exception $e) {
-            $error = "Database error: " . $e->getMessage();
-        }
-    }
+    CREATE TABLE IF NOT EXISTS pins (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        pin VARCHAR(6) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS transactions_data (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        network VARCHAR(50) NOT NULL,
+        plan VARCHAR(50) NOT NULL,
+        amount NUMERIC(12,2) NOT NULL,
+        status VARCHAR(20) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS transactions_airtime (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        network VARCHAR(50) NOT NULL,
+        phone VARCHAR(15) NOT NULL,
+        amount NUMERIC(12,2) NOT NULL,
+        status VARCHAR(20) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS transactions_cable (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        provider VARCHAR(50) NOT NULL,
+        smartcard VARCHAR(20) NOT NULL,
+        plan VARCHAR(50) NOT NULL,
+        amount NUMERIC(12,2) NOT NULL,
+        status VARCHAR(20) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ";
+
+    $pdo->exec($sql);
+    echo "✅ Database tables created successfully!";
+} catch (PDOException $e) {
+    echo "❌ Error creating tables: " . $e->getMessage();
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Register - LightSmartPay</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-<?php include 'navbar.php'; ?>
-<div class="center-box">
-  <div class="card">
-    <h2>Create Account</h2>
-    <?php if ($error): ?><p class="error"><?=htmlspecialchars($error)?></p><?php endif; ?>
-    <form method="post" action="register.php">
-      <input type="text" name="fullname" placeholder="Full name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Password (min 6)" required>
-      <button type="submit">Register</button>
-    </form>
-    <p>Already registered? <a href="login.php">Login</a></p>
-  </div>
-</div>
-</body>
-</html>
