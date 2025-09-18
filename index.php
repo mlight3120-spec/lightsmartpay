@@ -1,33 +1,29 @@
 <?php
-// index.php
 session_start();
-if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
-    exit;
-}
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>LightSmartPay</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<?php include 'navbar.php'; ?>
+  <div class="container">
+    <header class="header">
+      <img src="logo.png" alt="LightSmartPay Logo" class="logo">
+      <h1>Welcome to <span class="brand">LightSmartPay</span></h1>
+      <p class="tagline">Smart, Fast & Secure Payments for Data, Airtime, and Bills</p>
+    </header>
 
-<div class="center-box">
-  <h1>Welcome to LightSmartPay</h1>
-
-  <div class="card">
-    <h3>Login</h3>
-    <form method="post" action="login.php">
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="register.php">Register here</a></p>
+    <nav class="nav">
+      <a href="login.php" class="btn">Login</a>
+      <a href="register.php" class="btn secondary">Register</a>
+    </nav>
   </div>
-</div>
+
+  <footer class="footer">
+    <p>&copy; <?php echo date("Y"); ?> LightSmartPay. All rights reserved.</p>
+  </footer>
 </body>
 </html>
