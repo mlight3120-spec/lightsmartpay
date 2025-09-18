@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require 'config.php'; // ✅ correct file
 
 $message = "";
 
