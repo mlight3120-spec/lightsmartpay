@@ -1,59 +1,26 @@
 <?php
-require 'config.php';
+$config = include __DIR__ . "/config.php";
 
 try {
-    $sql = "
-    CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        fullname VARCHAR(100) NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        wallet_balance NUMERIC(12,2) DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+    $dsn = "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};";
+    $pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
 
-    CREATE TABLE IF NOT EXISTS pins (
-        id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        pin VARCHAR(6) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+    // ✅ Create users table with fullname
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            fullname VARCHAR(255) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            wallet_balance NUMERIC(12,2) DEFAULT 0,
+            pin VARCHAR(10),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ");
 
-    CREATE TABLE IF NOT EXISTS transactions_data (
-        id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        network VARCHAR(50) NOT NULL,
-        plan VARCHAR(50) NOT NULL,
-        amount NUMERIC(12,2) NOT NULL,
-        status VARCHAR(20) DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS transactions_airtime (
-        id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        network VARCHAR(50) NOT NULL,
-        phone VARCHAR(15) NOT NULL,
-        amount NUMERIC(12,2) NOT NULL,
-        status VARCHAR(20) DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS transactions_cable (
-        id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        provider VARCHAR(50) NOT NULL,
-        smartcard VARCHAR(20) NOT NULL,
-        plan VARCHAR(50) NOT NULL,
-        amount NUMERIC(12,2) NOT NULL,
-        status VARCHAR(20) DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    ";
-
-    $pdo->exec($sql);
-    echo "✅ Database tables created successfully!";
-} catch (PDOException $e) {
-    echo "❌ Error creating tables: " . $e->getMessage();
+    echo "✅ Tables created successfully!";
+} catch (Exception $e) {
+    echo "❌ Error: " . $e->getMessage();
 }
-?>
