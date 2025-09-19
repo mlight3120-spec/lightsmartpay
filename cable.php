@@ -1,20 +1,37 @@
 <?php
 require "db.php";
 session_start();
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+if (!isset($_SESSION['pin_verified']) || $_SESSION['pin_verified'] !== true) {
+    header("Location: pin_verify.php?redirect=cable.php");
+    exit;
+}
+
+$message = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $provider = $_POST['provider'];
-    $smartcard = $_POST['smartcard'];
-    $plan = $_POST['plan'];
+    $card = $_POST['card'];
+    $amount = (int)$_POST['amount'];
 
-    $stmt = $pdo->prepare("INSERT INTO cable (user_id, provider, smartcard, plan) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$_SESSION['user_id'], $provider, $smartcard, $plan]);
+    $stmt = $pdo->prepare("SELECT wallet_balance FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
 
-    $pdo->prepare("INSERT INTO transactions (user_id, service, details, amount) VALUES (?, 'cable', ?, 0)")
-        ->execute([$_SESSION['user_id'], "$provider - $plan - $smartcard"]);
+    if ($user['wallet_balance'] < $amount) {
+        $message = "❌ Insufficient wallet balance.";
+    } else {
+        $pdo->prepare("UPDATE users SET wallet_balance = wallet_balance - ? WHERE id = ?")
+            ->execute([$amount, $_SESSION['user_id']]);
+        $pdo->prepare("INSERT INTO transactions_cable (user_id, provider, card_number, amount) VALUES (?, ?, ?, ?)")
+            ->execute([$_SESSION['user_id'], $provider, $card, $amount]);
 
-    $success = "Cable request submitted!";
+        $message = "✅ Cable subscription successful for $card ($provider)";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -26,12 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 <?php include "sidebar.php"; ?>
 <div class="content">
-    <h2>Cable Subscription</h2>
-    <?php if (!empty($success)) echo "<p style='color:green'>$success</p>"; ?>
+    <h2>📺 Cable Subscription</h2>
+    <?php if ($message) echo "<p>$message</p>"; ?>
     <form method="post">
-        <input type="text" name="provider" placeholder="Provider (e.g DSTV)" required>
-        <input type="text" name="smartcard" placeholder="Smartcard Number" required>
-        <input type="text" name="plan" placeholder="Plan (e.g Compact)" required>
+        <select name="provider" required>
+            <option value="">--Select Provider--</option>
+            <option value="DSTV">DSTV</option>
+            <option value="GOTV">GOTV</option>
+            <option value="Startimes">Startimes</option>
+        </select>
+        <input type="text" name="card" placeholder="Smartcard / IUC Number" required>
+        <input type="number" name="amount" placeholder="Amount" required>
         <button type="submit">Subscribe</button>
     </form>
 </div>
