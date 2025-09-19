@@ -1,20 +1,25 @@
 <?php
 session_start();
-require 'config.php';
+$config = include __DIR__ . '/config.php';
 
-$message = "";
+$dsn = "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};";
+$pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $fullname = trim($_POST['fullname']);
-    $email = trim($_POST['email']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $full_name = $_POST['full_name'];
+    $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
+    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password, wallet_balance) VALUES (?, ?, ?, 0.00)");
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (fullname, email, password, wallet_balance) VALUES (?, ?, ?, 0)");
-        $stmt->execute([$fullname, $email, $password]);
-        $message = "✅ Account created successfully. Please login.";
+        $stmt->execute([$full_name, $email, $password]);
+        $_SESSION['user_id'] = $pdo->lastInsertId();
+        header("Location: dashboard.php");
+        exit;
     } catch (PDOException $e) {
-        $message = "❌ Error: " . $e->getMessage();
+        $error = "❌ Error: " . $e->getMessage();
     }
 }
 ?>
@@ -22,45 +27,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🚀 Create Account - LightSmartPay</title>
+  <title>Register - LightSmartPay</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background:#f8f9fa; }
-    .card { border-radius:15px; }
-    .password-toggle { cursor:pointer; }
+    body { background: #f9f9f9; }
+    .form-card {
+      max-width: 420px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .form-card h2 { margin-bottom: 20px; }
   </style>
 </head>
 <body>
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow p-4" style="max-width:400px; width:100%;">
-    <h3 class="text-center mb-3">🚀 Create Account</h3>
-    <?php if($message): ?>
-      <div class="alert alert-info"><?php echo $message; ?></div>
+  <div class="form-card">
+    <h2 class="text-center">🚀 Create Account</h2>
+    <?php if (!empty($error)): ?>
+      <div class="alert alert-danger"><?php echo $error; ?></div>
     <?php endif; ?>
     <form method="POST">
       <div class="mb-3">
         <label class="form-label">Full name</label>
-        <input type="text" name="fullname" class="form-control" required>
+        <input type="text" name="full_name" class="form-control" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Email</label>
         <input type="email" name="email" class="form-control" required>
       </div>
-      <div class="mb-3 position-relative">
-        <label class="form-label">Password (min 6)</label>
-        <input type="password" id="password" name="password" class="form-control" minlength="6" required>
-        <span class="position-absolute top-50 end-0 translate-middle-y me-3 password-toggle">👁</span>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" name="password" id="password" class="form-control" required>
+          <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">👁</button>
+        </div>
       </div>
       <button type="submit" class="btn btn-primary w-100">Register</button>
     </form>
-    <p class="text-center mt-3">Already registered? <a href="login.php">Login</a></p>
+    <p class="mt-3 text-center">Already registered? <a href="login.php">Login</a></p>
   </div>
-</div>
-<script>
-document.querySelector('.password-toggle').addEventListener('click', function(){
-  let pwd = document.getElementById('password');
-  pwd.type = (pwd.type === 'password') ? 'text' : 'password';
-});
-</script>
+
+  <script>
+    function togglePassword() {
+      const pass = document.getElementById('password');
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 </body>
 </html>
