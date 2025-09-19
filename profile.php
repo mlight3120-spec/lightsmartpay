@@ -1,31 +1,25 @@
 <?php
-session_start();
 require "db.php";
+session_start();
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
 
-if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
-    exit;
-}
-
-$stmt = $pdo->prepare("SELECT full_name, email, wallet_balance, created_at FROM users WHERE id = ?");
-$stmt->execute([$_SESSION["user_id"]]);
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Profile - LightSmartPay</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php include "sidebar.php"; ?>
-
-<div class="main-content">
-    <h2>👤 Profile</h2>
-    <p><strong>Name:</strong> <?= htmlspecialchars($user["full_name"]); ?></p>
-    <p><strong>Email:</strong> <?= htmlspecialchars($user["email"]); ?></p>
-    <p><strong>Wallet:</strong> ₦<?= number_format($user["wallet_balance"], 2); ?></p>
-    <p><strong>Joined:</strong> <?= $user["created_at"]; ?></p>
+<div class="content">
+    <h2>My Profile</h2>
+    <p><b>Name:</b> <?= htmlspecialchars($user['full_name']); ?></p>
+    <p><b>Email:</b> <?= htmlspecialchars($user['email']); ?></p>
+    <p><b>Wallet Balance:</b> ₦<?= number_format($user['wallet_balance'],2); ?></p>
 </div>
 </body>
 </html>
