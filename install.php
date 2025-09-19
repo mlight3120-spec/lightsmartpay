@@ -1,5 +1,5 @@
 <?php
-require "config.php";
+require "dp.php";
 
 try {
     // Drop existing tables safely
