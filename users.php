@@ -1,63 +1,48 @@
 <?php
 session_start();
-$config = include __DIR__ . '/config.php';
+$pdo = include "config.php";
 
-$dsn = "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};";
-$pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+// Admin email
+$admin_email = "admin@lightsmartpay.com";
 
-// ✅ Protect admin only
-$admin_email = "admin@lightsmarttopup.com"; // change this to your admin email
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
 }
 $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_SESSION["user_id"]]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-if (!$user || $user['email'] !== $admin_email) {
-    echo "⛔ Access denied. Admin only.";
-    exit;
+
+if ($user["email"] !== $admin_email) {
+    die("⛔ Access denied. Admin only.");
 }
 
-// ✅ Fetch all users with fullname
-$users = $pdo->query("SELECT id, fullname, email, wallet_balance, created_at FROM users ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+$users = $pdo->query("SELECT id, full_name, email, wallet_balance, created_at FROM users ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Manage Users - LightSmartPay</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="text-center mb-4">👥 Manage Users</h2>
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Wallet Balance</th>
-                    <th>Joined</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $u): ?>
-                <tr>
-                    <td><?php echo $u['id']; ?></td>
-                    <td><?php echo htmlspecialchars($u['fullname']); ?></td>
-                    <td><?php echo htmlspecialchars($u['email']); ?></td>
-                    <td>₦<?php echo number_format($u['wallet_balance'], 2); ?></td>
-                    <td><?php echo $u['created_at']; ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <a href="admin.php" class="btn btn-secondary">⬅ Back to Dashboard</a>
-    </div>
+<body>
+<div class="content">
+    <h2>👥 Manage Users</h2>
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Balance</th><th>Joined</th>
+        </tr>
+        <?php foreach ($users as $u): ?>
+        <tr>
+            <td><?= $u['id'] ?></td>
+            <td><?= htmlspecialchars($u['full_name']) ?></td>
+            <td><?= htmlspecialchars($u['email']) ?></td>
+            <td>₦<?= number_format($u['wallet_balance'], 2) ?></td>
+            <td><?= $u['created_at'] ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    <a href="dashboard.php">⬅ Back</a>
 </div>
 </body>
 </html>
