@@ -8,31 +8,48 @@ try {
     ]);
 
     // ✅ Create users table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            fullname VARCHAR(100) NOT NULL,
-            email VARCHAR(100) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            wallet_balance NUMERIC(12,2) DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ");
+    $sql = "CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        full_name VARCHAR(100) NOT NULL,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        wallet_balance DECIMAL(10,2) DEFAULT 0.00,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
 
-    // ✅ Create transactions table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS transactions (
-            id SERIAL PRIMARY KEY,
-            user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            type VARCHAR(50) NOT NULL,
-            amount NUMERIC(12,2) NOT NULL,
-            status VARCHAR(20) DEFAULT 'pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ");
-
-    echo "✅ Tables created successfully!";
-
+    $pdo->exec($sql);
+    $message = "✅ Tables created successfully!";
 } catch (PDOException $e) {
-    echo "❌ Error: " . $e->getMessage();
+    $message = "❌ Error: " . $e->getMessage();
 }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Install - LightSmartPay</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f4f6f9; }
+    .install-box {
+      max-width: 500px;
+      margin: 100px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="install-box text-center">
+    <h2>⚙️ LightSmartPay Installer</h2>
+    <hr>
+    <div class="alert <?php echo str_contains($message, '✅') ? 'alert-success' : 'alert-danger'; ?>">
+      <?php echo $message; ?>
+    </div>
+    <a href="register.php" class="btn btn-primary">Proceed to Register</a>
+    <a href="login.php" class="btn btn-success">Go to Login</a>
+  </div>
+</body>
+</html>
