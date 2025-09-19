@@ -1,37 +1,39 @@
-<?php include "config.php"; ?>
+<?php
+require "db.php";
+session_start();
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $network = $_POST['network'];
+    $phone = $_POST['phone'];
+    $amount = $_POST['amount'];
+
+    $stmt = $pdo->prepare("INSERT INTO airtime (user_id, network, phone, amount) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$_SESSION['user_id'], $network, $phone, $amount]);
+
+    $pdo->prepare("INSERT INTO transactions (user_id, service, details, amount) VALUES (?, 'airtime', ?, ?)")
+        ->execute([$_SESSION['user_id'], "$network - $phone", $amount]);
+
+    $success = "Airtime request submitted!";
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Buy Airtime | LightSmartPay</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>Airtime</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php include "navbar.php"; ?>
+<?php include "sidebar.php"; ?>
 <div class="content">
-  <h2>Buy Airtime</h2>
-  <form method="POST" action="verify_pin.php">
-    
-    <label>Network</label>
-    <select name="network" required>
-      <option value="">-- Select Network --</option>
-      <option value="MTN">MTN</option>
-      <option value="Airtel">Airtel</option>
-      <option value="Glo">Glo</option>
-      <option value="9mobile">9mobile</option>
-    </select>
-
-    <label>Phone Number</label>
-    <input type="number" name="phone" placeholder="Enter phone number" required>
-
-    <label>Amount (₦)</label>
-    <input type="number" name="amount" placeholder="Enter amount e.g 100" required>
-
-    <label>Transaction PIN</label>
-    <input type="password" name="pin" placeholder="Enter 4-digit PIN" maxlength="4" required>
-
-    <button type="submit">Buy Airtime</button>
-  </form>
+    <h2>Airtime Topup</h2>
+    <?php if (!empty($success)) echo "<p style='color:green'>$success</p>"; ?>
+    <form method="post">
+        <input type="text" name="network" placeholder="Network (e.g MTN)" required>
+        <input type="text" name="phone" placeholder="Phone Number" required>
+        <input type="number" name="amount" placeholder="Amount" required>
+        <button type="submit">Buy Airtime</button>
+    </form>
 </div>
 </body>
 </html>
