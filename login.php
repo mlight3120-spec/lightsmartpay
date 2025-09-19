@@ -1,27 +1,26 @@
 <?php
 session_start();
-require 'config.php';
+$config = include __DIR__ . '/config.php';
 
-$message = "";
+$dsn = "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};";
+$pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST['email']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
-    try {
-        $stmt = $pdo->prepare("SELECT id, password FROM users WHERE email = ? LIMIT 1");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE email = ? LIMIT 1");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $message = "❌ Invalid email or password.";
-        }
-    } catch (PDOException $e) {
-        $message = "❌ Error: " . $e->getMessage();
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $error = "❌ Invalid login details";
     }
 }
 ?>
@@ -29,41 +28,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🔐 Login - LightSmartPay</title>
+  <title>Login - LightSmartPay</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background:#eef2f7; }
-    .card { border-radius:15px; }
-    .password-toggle { cursor:pointer; }
+    body { background: #f9f9f9; }
+    .form-card {
+      max-width: 420px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .form-card h2 { margin-bottom: 20px; }
   </style>
 </head>
 <body>
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow p-4" style="max-width:400px; width:100%;">
-    <h3 class="text-center mb-3">🔐 Login</h3>
-    <?php if($message): ?>
-      <div class="alert alert-danger"><?php echo $message; ?></div>
+  <div class="form-card">
+    <h2 class="text-center">🔑 Login</h2>
+    <?php if (!empty($error)): ?>
+      <div class="alert alert-danger"><?php echo $error; ?></div>
     <?php endif; ?>
     <form method="POST">
       <div class="mb-3">
         <label class="form-label">Email</label>
         <input type="email" name="email" class="form-control" required>
       </div>
-      <div class="mb-3 position-relative">
+      <div class="mb-3">
         <label class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required>
-        <span class="position-absolute top-50 end-0 translate-middle-y me-3 password-toggle">👁</span>
+        <div class="input-group">
+          <input type="password" name="password" id="loginpass" class="form-control" required>
+          <button class="btn btn-outline-secondary" type="button" onclick="toggleLoginPass()">👁</button>
+        </div>
       </div>
       <button type="submit" class="btn btn-success w-100">Login</button>
     </form>
-    <p class="text-center mt-3">Don’t have an account? <a href="register.php">Register here</a></p>
+    <p class="mt-3 text-center">Don’t have an account? <a href="register.php">Register</a></p>
   </div>
-</div>
-<script>
-document.querySelector('.password-toggle').addEventListener('click', function(){
-  let pwd = document.getElementById('password');
-  pwd.type = (pwd.type === 'password') ? 'text' : 'password';
-});
-</script>
+
+  <script>
+    function toggleLoginPass() {
+      const pass = document.getElementById('loginpass');
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 </body>
 </html>
