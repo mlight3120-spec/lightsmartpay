@@ -1,5 +1,5 @@
 <?php
-include 'dp.php';
+$config = include __DIR__ . "/config.php";
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
