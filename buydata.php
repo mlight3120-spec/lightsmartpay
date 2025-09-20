@@ -35,7 +35,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <div class="content">
         <div class="card shadow p-4">
-            <h4 class="mb-3">🌐 Buy Data (+₦50 commission)</h4>
+            <h4 class="mb-3">🌐 Buy Data </h4>
             <form method="POST" action="process_data.php">
                 <div class="mb-3">
                     <label class="form-label">Network</label>
@@ -46,8 +46,16 @@ if (!isset($_SESSION['user_id'])) {
                         <option value="airtel">Airtel</option>
                         <option value="9mobile">9mobile</option>
                     </select>
-                </div>
-                <div class="mb-3">
+                    <div class="mb-3">
+                <label class="form-label">Data Type</label>
+                <select name="type" class="form-control" required>
+                <option value="">-- Select Data Type --</option>
+                <option value="sme">SME</option>
+                <option value="corporate">Corporate</option>
+                <option value="gifting">Gifting</option>
+               </select>
+                    </div>
+                    <div class="mb-3">
                     <label class="form-label">Data Plan</label>
                     <select name="plan" class="form-control" required>
                         <option value="">-- Select Plan --</option>
