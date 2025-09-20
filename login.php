@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . '/db.php';
+$config = include __DIR__ . "/config.php";
 
 $dsn = "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};";
 $pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
