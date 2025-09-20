@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "config.php";
+require "dp.php";
 
 // If user never login, redirect back to login page
 if (!isset($_SESSION['user_id'])) {
