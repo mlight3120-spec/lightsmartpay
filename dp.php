@@ -1,14 +1,14 @@
 <?php
-// db.php
-$config = require "config.php";
+$host = "dpg-d326jbadbo4c73a6urog-a";   
+$port = "5432";        
+$dbname = "lightsmartpay";
+$user = "lightsmartpay_user";
+$pass = "ikPevBhb9xHModBeJYsGIvtcmY6rmPuH";
 
 try {
-    $pdo = new PDO(
-        "pgsql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']}",
-        $config['DB_USER'],
-        $config['DB_PASS']
-    );
+    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (Exception $e) {
-    die("❌ DB Connection failed: " . $e->getMessage());
+} catch (PDOException $e) {
+    die("❌ Database connection failed: " . $e->getMessage());
 }
+?>
