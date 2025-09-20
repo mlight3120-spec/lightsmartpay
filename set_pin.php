@@ -1,7 +1,6 @@
-
 <?php
 session_start();
-include 'config.php'; // config.php must create $pdo (PDO connection)
+include 'config.php'; // config.php must create $pdo (PDO connection
 
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
