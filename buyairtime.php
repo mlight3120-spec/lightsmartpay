@@ -37,7 +37,7 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Main Content -->
     <div class="content">
         <div class="card shadow p-4">
-            <h4 class="mb-3">📱 Buy Airtime (+₦50 commission)</h4>
+            <h4 class="mb-3">📱 Buy Airtime</h4>
             <form method="POST" action="process_airtime.php">
                 <div class="mb-3">
                     <label class="form-label">Network</label>
