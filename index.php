@@ -61,12 +61,7 @@ if (isset($_SESSION['user_id'])) {
           <a href="register.php" class="btn btn-primary cta-btn">Create Account — It’s Free</a>
           <a href="buydata.php" class="btn btn-outline-dark cta-btn">Buy Data Now</a>
         </div>
-
-        <div class="mt-4 d-flex gap-3 align-items-center">
-          <span class="badge-commission">₦50 Funding Commission</span>
-          <small class="text-muted">Commission applied when users fund wallet; set in platform settings.</small>
-        </div>
-
+          
         <div class="row gx-3 mt-5">
           <div class="col-6 mb-3">
             <div class="feature">
