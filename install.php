@@ -1,5 +1,5 @@
 <?php
-require "dp.php";
+$config = include __DIR__ . "/config.php";
 
 try {
     // Drop existing tables safely
