@@ -1,8 +1,8 @@
 <?php
 return [
-    "DB_HOST" => "dpg-d326jbadbo4c73a6urog-a",  
+    "DB_HOST" => "dpg-d3p3smu3jp1c739taqf0-a",  
     "DB_PORT" => "5432",                     
-    "DB_NAME" => "lightsmartpay",             
-    "DB_USER" => "lightsmartpay_user",        
-    "DB_PASS" => "ikPevBhb9xHModBeJYsGIvtcmY6rmPuH"         
+    "DB_NAME" => "lightsmartpay_86o4",             
+    "DB_USER" => "lightsmartpay_86o4_user",        
+    "DB_PASS" => "B7zSfYVi0RWA0zKmLwXMXOZHxeeGiSz2"         
 ];
