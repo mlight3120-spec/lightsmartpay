@@ -97,6 +97,7 @@ $transactions = $tx->fetchAll(PDO::FETCH_ASSOC);
         <a href="buyairtime.php">📱 Buy Airtime </a>
         <a href="buydata.php">🌐 Buy Data </a>
         <a href="cable.php">📺 Cable Subscription</a>
+         <a href="transactions.php">📱 Transactions</a>
         <a href="transactions_airtime.php">📑 Airtime Transactions</a>
         <a href="transactions_data.php">📑 Data Transactions</a>
         <a href="transactions_cable.php">📑 Cable Transactions</a>
