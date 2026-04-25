@@ -8,9 +8,9 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <header>
-  <img src="images/logo.png" alt="LightSmartPay Logo" class="logo">
- <link href="style.css">stylesheet</a>
-</header>
+  <img src="images/logo.png" alt="LightSmartPay Logo" class="logo">style="max-width:540px;border-radius:18px; box-shadow:0 20px 50px rgba(2,6,23,0.08)" onerror="this.onerror=null;this.src='https://via.placeholder.com/540x350?text=Preview'">
+</div>
+ <link rel="stylesheet" href="style.css
 <!doctype html>
 <html lang="en">
 <head>
@@ -41,7 +41,7 @@ if (isset($_SESSION['user_id'])) {
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="assets/logo.png" alt="LightSmartPay" class="brand-logo me-2" onerror="this.onerror=null;this.src='https://via.placeholder.com/140x60?text=Logo'">
+      <img src="images/logo.png" alt="LightSmartPay" class="brand-logo me-2" onerror="this.onerror=null;this.src='https://via.placeholder.com/140x60?text=Logo'">
       <span style="font-weight:800; color:var(--primary)">LightSmartPay</span>
     </a>
     <div class="d-flex align-items-center gap-2">
@@ -87,12 +87,6 @@ if (isset($_SESSION['user_id'])) {
           </div>
           <div class="col-6 mb-3">
             <div class="feature">
-              <h5 style="margin:0; font-weight:700">Admin Control</h5>
-              <p style="margin:0; color:var(--muted)">Manage users, transactions and settings from the admin panel.</p>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div class="col-lg-6 text-center">
@@ -132,7 +126,7 @@ if (isset($_SESSION['user_id'])) {
 <footer class="footer mt-5">
   <div class="container d-flex justify-content-between align-items-center">
     <div>© <?php echo date('Y'); ?> LightSmartPay — Evylite Global Ventures</div>
-    <div>Support: <a href="mailto:evyliteglobalsupport@gmail.com">evyliteglobalsupport@gmail.com</a></div>
+    <div>Support: <a href="mailto:lightsmartpay@gmail.com">lightsmartpay@gmail.com</a></div>
   </div>
 </footer>
 
