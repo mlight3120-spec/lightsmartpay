@@ -9,6 +9,7 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <header>
   <img src="images/logo.png" alt="LightSmartPay Logo" class="logo">
+ <link href="style.css">stylesheet</a>
 </header>
 <!doctype html>
 <html lang="en">
@@ -16,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LightSmartPay — Fast, Secure Payments</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root{
       --primary:#0066ff;
