@@ -1,13 +1,8 @@
-header {
-  text-align: center;
-  padding: 20px;
-}
-
 .logo {
-  display: block;
-  margin: 0 auto;
-  max-width: 120px;
+  width: 80px !important;
   height: auto;
+  display: circle;
+  margin: 10px auto;
 }
 .sidebar {
     width: 220px;
