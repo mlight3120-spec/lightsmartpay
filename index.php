@@ -8,9 +8,7 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <header>
-  <img src="images/logo.png" alt="Logo" class="logo">
-  <h2>LightSmartPay</h2>
-  <p>Fast Data, Airtime & Cable Subscription</p>
+  <img src="images/logo.png" alt="LightSmartPay Logo" class="logo">
 </header>
 <!doctype html>
 <html lang="en">
