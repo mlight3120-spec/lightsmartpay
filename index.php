@@ -8,8 +8,7 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <header>
-  <img src="images/logo.png" alt="LightSmartPay Logo" class="logo">style="max-width:540px;border-radius:18px; box-shadow:0 20px 50px rgba(2,6,23,0.08)" onerror="this.onerror=null;this.src='https://via.placeholder.com/540x350?text=Preview'">
-</div>
+<img src="images/logo.png" alt="LightSmartPay" class="brand-logo me-2" onerror="this.onerror=null;this.src='https://via.placeholder.com/140x60?text=Logo'">
  <link rel="stylesheet" href="style.css
 <!doctype html>
 <html lang="en">
@@ -125,7 +124,7 @@ if (isset($_SESSION['user_id'])) {
 
 <footer class="footer mt-5">
   <div class="container d-flex justify-content-between align-items-center">
-    <div>© <?php echo date('Y'); ?> LightSmartPay — Evylite Global Ventures</div>
+    <div>© <?php echo date('Y'); ?> LightSmartPay — Light Smart Pay</div>
     <div>Support: <a href="mailto:lightsmartpay@gmail.com">lightsmartpay@gmail.com</a></div>
   </div>
 </footer>
