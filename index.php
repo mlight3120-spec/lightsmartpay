@@ -7,8 +7,6 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 ?>
-<header>
-<img src="images/logo.png" alt="LightSmartPay" class="brand-logo me-2" onerror="this.onerror=null;this.src='https://via.placeholder.com/140x60?text=Logo'">
  <link rel="stylesheet" href="style.css
 <!doctype html>
 <html lang="en">
@@ -82,12 +80,9 @@ if (isset($_SESSION['user_id'])) {
             <div class="feature">
               <h5 style="margin:0; font-weight:700">Multiple Data Types</h5>
               <p style="margin:0; color:var(--muted)">SME, Corporate, Gifting, Awoof — all in one place.</p>
-            </div>
-          </div>
           <div class="col-6 mb-3">
             <div class="feature">
       </div>
-
       <div class="col-lg-6 text-center">
         <!-- sample hero image / screenshot -->
         <img src="assets/hero-screenshot.png" alt="app-preview" class="img-fluid" style="max-width:540px;border-radius:18px; box-shadow:0 20px 50px rgba(2,6,23,0.08)" onerror="this.onerror=null;this.src='https://via.placeholder.com/540x350?text=Preview'">
