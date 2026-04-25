@@ -7,6 +7,11 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 ?>
+<header>
+  <img src="images/logo.png" alt="Logo" class="logo">
+  <h2>LightSmartPay</h2>
+  <p>Fast Data, Airtime & Cable Subscription</p>
+</header>
 <!doctype html>
 <html lang="en">
 <head>
